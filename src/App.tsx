@@ -74,8 +74,8 @@ export default function App() {
     <main className="app">
       <header className="topbar">
         <div className="brand">
-          <h1>贪吃蛇</h1>
-          <span className="sub">迷宫逃生</span>
+          <h1>贪吃蛇解密</h1>
+          <span className="sub">snakepuzzles</span>
         </div>
         <div className="toolbar">
           <div className="levels">

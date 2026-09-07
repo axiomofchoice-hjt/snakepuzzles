@@ -1,4 +1,4 @@
-# 贪吃蛇 · 迷宫逃生 (memorysnake)
+# 贪吃蛇解密 (snakepuzzles)
 
 一款结合了经典贪吃蛇与迷宫解谜的网页小游戏：在环形边界的迷宫里移动蛇，吃到钥匙、开门、绕过墙，让蛇头抵达终点。
 
@@ -49,10 +49,10 @@ npm run preview  # 本地预览构建产物
 
 本仓库配置了 CI（`.github/workflows/deploy.yml`）：push 到 `main`/`master` 或手动触发时执行 `npm ci && npm run build`，并用 `peaceiris/actions-gh-pages` 把 `dist/` 发布到 **`gh-pages`** 分支。
 
-生产构建的 `base` 为 `/memorysnake/`（见 `vite.config.js`），对应项目站点地址：
+生产构建的 `base` 为 `/snakepuzzles/`（见 `vite.config.ts`），对应项目站点地址：
 
 ```
-https://<用户名>.github.io/memorysnake/
+https://<用户名>.github.io/snakepuzzles/
 ```
 
 使用步骤：
