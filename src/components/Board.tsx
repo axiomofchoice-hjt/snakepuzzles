@@ -158,17 +158,10 @@ function dirFrom(fr: number, fc: number, tr: number, tc: number, W: number, H: n
 }
 
 // 拖动时按“优势轴”给方向（按指针物理移动方向，不取环绕捷径）
-function dragDir(fr: number, fc: number, tr: number, tc: number): Direction | null {
-  const dc = tc - fc, dr = tr - fr;
-  if (Math.abs(dc) >= Math.abs(dr) && dc !== 0) return dc > 0 ? 'right' : 'left';
-  if (dr !== 0) return dr > 0 ? 'down' : 'up';
-  return null;
-}
-
 interface BoardProps {
   state: GameState;
   snapKey?: number;
-  onMove: (dir: Direction) => void;
+  onMove: (dir: Direction) => boolean;
   controlHead?: Cell;
 }
 
@@ -183,9 +176,9 @@ export default function Board({ state, snapKey = 0, onMove, controlHead }: Board
   const bw = state.W * stride - GAP;
   const bh = state.H * stride - GAP;
 
-  // 鼠标/触摸：点击相邻格子移动，按下后拖动可连续移动
+  // 鼠标/触摸：点击蛇头相邻格移动，按住拖动到蛇头相邻格连续移动
   const boardRef = useRef<HTMLDivElement | null>(null);
-  const dragRef = useRef<{ last: Cell } | null>(null);
+  const dragRef = useRef<boolean>(false);
 
   const cellFromPoint = (x: number, y: number): Cell => {
     const c = Math.max(0, Math.min(state.W - 1, Math.floor(x / stride)));
@@ -202,8 +195,8 @@ export default function Board({ state, snapKey = 0, onMove, controlHead }: Board
     e.preventDefault();
     e.currentTarget.setPointerCapture && e.currentTarget.setPointerCapture(e.pointerId);
     const cell = pointerCell(e);
-    dragRef.current = { last: cell };
-    // 用真实游戏蛇头（controlHead）判断方向，硬模式下撞墙/门才会正确判为失败
+    dragRef.current = true;
+    // 用真实游戏蛇头（controlHead）判断方向：只有点击到蛇头相邻格才移动
     const h = controlHead || state.snake[0];
     const dir = dirFrom(h.r, h.c, cell.r, cell.c, state.W, state.H);
     if (dir) onMove(dir);
@@ -212,14 +205,14 @@ export default function Board({ state, snapKey = 0, onMove, controlHead }: Board
   const handlePointerMove = (e: ReactPointerEvent<HTMLDivElement>): void => {
     if (!dragRef.current) return;
     const cell = pointerCell(e);
-    const last = dragRef.current.last;
-    if (last.r === cell.r && last.c === cell.c) return;
-    dragRef.current.last = cell;
-    const dir = dragDir(last.r, last.c, cell.r, cell.c);
+    // 每次都用真实蛇头重算方向，且要求鼠标位于相邻格才移动。
+    // 这样被墙挡住时蛇头不动，方向始终相对蛇头，鼠标不会与移动位置漂移。
+    const h = controlHead || state.snake[0];
+    const dir = dirFrom(h.r, h.c, cell.r, cell.c, state.W, state.H);
     if (dir) onMove(dir);
   };
 
-  const handlePointerEnd = (): void => { dragRef.current = null; };
+  const handlePointerEnd = (): void => { dragRef.current = false; };
 
   const tiles = useMemo(() => {
     const arr: JSX.Element[] = [];

@@ -14,23 +14,26 @@ export default function App() {
   const [snapKey, setSnapKey] = useState(0); // 重置/揭示时递增，让动画直接落到目标
   const baseRef = useRef<GameState | null>(null); // 初始快照（困难模式盲走时显示）
   if (baseRef.current === null) baseRef.current = game;
+  const gameRef = useRef<GameState>(game); // 最新状态，供 move 同步判断是否真的移动
 
   const reset = useCallback((lvl: number = level): void => {
     const st = fresh(lvl);
     baseRef.current = st;
+    gameRef.current = st;
     setGame(st);
     setLevel(lvl);
     setSnapKey((k) => k + 1);
   }, [level]);
 
-  const move = useCallback((dir: Direction): void => {
-    setGame((prev) => {
-      if (!prev || prev.status !== 'playing') return prev;
-      const next = applyMove(prev, dir);
-      // 简单模式：撞墙/撞自己不算失败，蛇原地不动、继续游戏（不计次数）
-      if (!hardMode && next.status === 'lost') return prev;
-      return next;
-    });
+  const move = useCallback((dir: Direction): boolean => {
+    const prev = gameRef.current;
+    if (!prev || prev.status !== 'playing') return false;
+    const next = applyMove(prev, dir);
+    // 简单模式：撞墙/撞自己不算失败，蛇原地不动、继续游戏（不计次数）
+    if (!hardMode && next.status === 'lost') return false;
+    gameRef.current = next;
+    setGame(next);
+    return true;
   }, [hardMode]);
 
   const setMode = useCallback((hard: boolean): void => {
