@@ -2,3 +2,10 @@ node_modules/
 dist/
 .npm-cache/
 *.log
+
+# zhihu-ai-works-deploy-helper 生成物（可由源码重新探测/生成）
+_tmp/
+snakepuzzles.zip
+
+# .dsh 内 skill 脚本运行后产生的 Python 字节码缓存
+__pycache__/

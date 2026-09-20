@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "tsx src/test_logic.ts",
-    "snapshot": "tsx src/ssr_snapshot.ts"
+    "snapshot": "tsx src/ssr_snapshot.ts",
+    "build:track": "node _tmp/materialize-event-tracking-ticket.cjs"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -23,5 +24,6 @@
     "tsx": "^4.23.13",
     "typescript": "^7.0.2",
     "vite": "^5.4.8"
-  }
+  },
+  "aiworksEventTrackingBuild": 1
 }

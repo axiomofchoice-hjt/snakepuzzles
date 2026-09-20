@@ -1,14 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig(({ command }) => ({
+export default defineConfig({
   plugins: [react()],
-  // 生产构建部署到 GitHub Pages 项目站点(/snakepuzzles/)时用该 base，
-  // 本地 dev 仍用根路径，避免访问地址变化。
-  base: command === 'build' ? '/snakepuzzles/' : '/',
+  // 默认根路径 '/'（适配 CloudBase 等根路径托管）；
+  // GitHub Pages 项目站点由 CI 通过环境变量 VITE_BASE=/snakepuzzles/ 传入。
+  base: process.env.VITE_BASE ?? '/',
   server: {
     host: '127.0.0.1',
     port: 5173,
     strictPort: true,
   },
-}));
+});

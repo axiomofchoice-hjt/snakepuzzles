@@ -45,7 +45,7 @@ npm run preview  # 本地预览构建产物
 
 本仓库配置了 CI（`.github/workflows/deploy.yml`）：push 到 `main`/`master` 或手动触发时执行 `npm ci && npm run build`，并用 `peaceiris/actions-gh-pages` 把 `dist/` 发布到 **`gh-pages`** 分支。
 
-生产构建的 `base` 为 `/snakepuzzles/`（见 `vite.config.ts`），对应项目站点地址：
+构建的 `base` 由环境变量 `VITE_BASE` 控制（见 `vite.config.ts`），未设置时默认为 `/`（适配 CloudBase 等根路径托管）；GitHub Pages CI 传入 `VITE_BASE=/snakepuzzles/`，对应项目站点地址：
 
 ```
 https://<用户名>.github.io/snakepuzzles/
