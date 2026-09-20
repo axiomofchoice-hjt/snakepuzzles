@@ -77,7 +77,7 @@ export default function App() {
     <main className="app">
       <header className="topbar">
         <div className="brand">
-          <h1>贪吃蛇解密</h1>
+          <h1>贪吃蛇解谜</h1>
           <span className="sub">snakepuzzles</span>
         </div>
         <div className="toolbar">
